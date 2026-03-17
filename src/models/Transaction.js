@@ -5,6 +5,9 @@ const subscriptionSchema = mongoose.Schema({
   paymentDate: {
     type: Date.now,
   },
+  amount:{
+    type: Number,
+  },
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',
