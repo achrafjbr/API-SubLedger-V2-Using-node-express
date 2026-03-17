@@ -1,9 +1,15 @@
+const { body } = require("express-validator");
 const authService = require("../services/authenticationService");
 const { signToken, verifyToken } = require("../utils/jwtoken");
 const { registerSchema, loginSchema } = require("../utils/validation");
 
 const register = async (request, response) => {
-    console.log(request.body);
+    const {
+        body: { name, email, password },
+    } = request;
+    const { error } = registerSchema.validate({ name, email, password });
+    if (error)
+        return response.status(400).json({ error: error.details[0].message });
 
     const {
         body: { name, email, password },

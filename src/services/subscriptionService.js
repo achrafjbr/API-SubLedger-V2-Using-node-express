@@ -9,6 +9,7 @@ const subscribe = async (subscription) => {
     return new DIMessage().message(
       new ErrorMessage(500, "Something went wrong, try again"),
     );
+    // create transaction
   return new DIMessage().message(
     new SuccessMessage(201, "Success", subscriptionData),
   );

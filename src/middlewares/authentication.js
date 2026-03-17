@@ -1,69 +1,34 @@
 const { verifyToken } = require("../utils/jwtoken");
 const { getHeaderToken } = require("../utils/utilities");
 
-const isAuthenticated = (request, response, next) => {
-  const token = getHeaderToken(request);
-  console.log("TOKEN", token);
+const isAuthenticated = (req, res, next) => {
+  const token = getHeaderToken(req);
 
   if (!token) {
-    return res.status(401).json({
-      message: "No token provided",
-    });
+    return res.status(401).json({ message: "No token provided" });
   }
-  const decoded = verifyToken(token);
-  request.user = decoded;
-  console.log("DECODING TOKEN", decoded);
 
-  console.log("USER", request.user);
-  if (!token) return response.status(401).json({ message: "No token" });
-  next();
-};
-
-const isAdmin = (request, response, next) => {
-  const token = getHeaderToken(request);
-  const decoded = verifyToken(token);
-  request.user = decoded;
-  if (decoded.user.role == true) next();
-  response.status(403).json({ message: "Unauthorized" });
-};
-
-const isUser = (request, response, next) => {
-  const token = getHeaderToken(request);
-  const decoded = verifyToken(token);
-  request.user = decoded;
-  if (decoded.user.role == false) next();
-  return response.status(403).json({ message: "Unauthorized" });
+  try {
+    const decoded = verifyToken(token);
+    req.user = decoded;
+    next();
+  } catch (err) {
+    return res.status(401).json({ message: "Invalid token" });
+  }
 };
 
 const authRoles = (...roles) => {
-  console.log(roles);
+  return (req, res, next) => {
+    if (!req.user) {
+      return res.status(401).json({ message: "User not authenticated" });
+    }
 
-  return (request, response, next) => {
-    console.log('INSIDE AUTHROLE HANDLER');
-    console.log("CURRENT USER", request.user)
-    
-    const {
-      user: { role },
-    } = request;
-    
-    if (!request.user) {
-      return res.status(401).json({
-        message: "User not authenticated",
-      });
+    if (!roles.includes(req.user.role)) {
+      return res.status(403).json({ message: "Access denied" });
     }
-    console.log("role", role);
-    if (!roles.includes(request.user.role)) {
-      return response.status(403).json({
-        message: "You are not authorized! Access denied",
-      });
-    }
+
     next();
   };
 };
 
-module.exports = {
-  isAuthenticated,
-  authRoles,
-  isAdmin,
-  isUser,
-};
+module.exports = { isAuthenticated, authRoles };

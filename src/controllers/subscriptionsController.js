@@ -150,10 +150,36 @@ const deleteSubscriptionById = async (request, response) => {
   }
 };
 
+
+
+const cancelSubscription = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const sub = await getSubscription(id);
+
+    if (sub.statusCode !== 200) {
+      return res.status(sub.statusCode).json(sub);
+    }
+
+    if (sub.data.user.toString() !== req.user.id) {
+      return res.status(403).json({ message: "Not authorized" });
+    }
+
+    const result = await updateSubscription(id, { status: "cancelled" });
+
+    return res.status(200).json(result);
+  } catch (err) {
+    return res.status(500).json({ message: err.message });
+  }
+};
+
+
 module.exports = {
   createSubscription,
   getSubscriptions,
   getSubscriptionById,
   deleteSubscriptionById,
   updateSubscriptionById,
+  cancelSubscription,
 };

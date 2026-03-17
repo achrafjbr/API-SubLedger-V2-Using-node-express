@@ -3,7 +3,8 @@ const mongoose = require("mongoose");
 
 const subscriptionSchema = mongoose.Schema({
   paymentDate: {
-    type: Date.now,
+    type: Date,
+    default:Date.now
   },
   amount:{
     type: Number,
