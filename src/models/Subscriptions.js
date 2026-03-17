@@ -41,7 +41,7 @@ const subscriptionSchema = mongoose.Schema({
     enum: ["monthly", "yearly"],
     required: true,
   },
-  startDate: Date,
+  startDate: {type:Date, default:Date.now},
 
   status:{
     type:String,
