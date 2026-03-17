@@ -1,9 +1,8 @@
 const express = require("express");
+const { getUsers } = require("../controllers/adminController");
 
 const adminRouter = express.Router();
 
-adminRouter.get("/", (req, res) => {
-    res.send("Hello Admin");
-});
+adminRouter.get("/", getUsers);
 
 module.exports = { adminRouter };
