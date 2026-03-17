@@ -54,8 +54,6 @@ class DIMessage {
         return messageClass.build();
     }
 
-    text(){}
-
 }
 
 module.exports = {
