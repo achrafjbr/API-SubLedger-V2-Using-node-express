@@ -6,7 +6,11 @@ const subscribe = async (subscription) =>
 const getSubscription = async (subscriptionId) =>
   await Subscription.findOne({_id: subscriptionId});
 
+const createUserTransaction = async (subscriptionId) =>
+  await Subscription.findOne({_id: subscriptionId});
+
 module.exports = {
+  createUserTransaction,
   subscribe,
   getSubscription,
 };

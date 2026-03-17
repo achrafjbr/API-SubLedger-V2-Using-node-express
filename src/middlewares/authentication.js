@@ -5,17 +5,15 @@ const isAuthenticated = (request, response, next) => {
   const token = getHeaderToken(request);
   console.log("TOKEN", token);
 
+
   if (!token) {
-    return res.status(401).json({
+    return response.status(401).json({
       message: "No token provided",
     });
   }
   const decoded = verifyToken(token);
   request.user = decoded;
   console.log("DECODING TOKEN", decoded);
-
-  console.log("USER", request.user);
-  if (!token) return response.status(401).json({ message: "No token" });
   next();
 };
 
@@ -51,7 +49,7 @@ const authRoles = (...roles) => {
         message: "User not authenticated",
       });
     }
-    console.log("role", role);
+
     if (!roles.includes(request.user.role)) {
       return response.status(403).json({
         message: "You are not authorized! Access denied",
