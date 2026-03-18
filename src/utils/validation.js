@@ -4,7 +4,6 @@ const createSubscriptionSchema= Joi.object({
     name : Joi.string().required(),
     price : Joi.number().integer().required(),
     billingCycle:Joi.string().required(),
-    user:Joi.string().required(),
 });
 
 

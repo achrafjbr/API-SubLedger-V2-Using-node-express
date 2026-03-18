@@ -6,10 +6,12 @@ const { signToken, verifyToken } = require("../utils/jwtoken");
 
 const login = async (email, password) => {
   const user = await userDAO.findUserByemail(email);
+  console.log('USER:::::',user);
+  
   if (!user) {
     // Error
     return new DIMessage().message(
-      new ErrorMessage(400, "User already existed"),
+      new ErrorMessage(400, "Bad credentials"),
     );
   }
   // Compare between hash pass & current pass.
