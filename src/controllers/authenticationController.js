@@ -4,12 +4,6 @@ const { signToken, verifyToken } = require("../utils/jwtoken");
 const { registerSchema, loginSchema } = require("../utils/validation");
 
 const register = async (request, response) => {
-    const {
-        body: { name, email, password },
-    } = request;
-    const { error } = registerSchema.validate({ name, email, password });
-    if (error)
-        return response.status(400).json({ error: error.details[0].message });
 
     const {
         body: { name, email, password },
