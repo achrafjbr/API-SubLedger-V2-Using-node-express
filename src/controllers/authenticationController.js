@@ -7,7 +7,6 @@ const register = async (request, response) => {
     const {
         body: { name, email, password },
     } = request;
-
     const { error } = registerSchema.validate({ name, email, password });
     if (error)
         return response.status(400).json({ error: error.details[0].message });
@@ -31,13 +30,6 @@ const login = async (request, response) => {
         return response.status(400).json({ error: error.details[0].message });
     try {
         const result = await authService.login(email, password);
-        const {
-            data: { accessToken },
-        } = result;
-
-        if (accessToken) {
-            response.setHeader("Authorization", `Bearer ${accessToken}`);
-        }
         return response.status(result.statusCode).json(result);
     } catch (error) {
         return response.status(500).json({

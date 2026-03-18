@@ -1,23 +1,24 @@
 const subscriptionDao = require("../dao/subscription");
 const transactionDao = require("../dao/transaction");
 const { findUserById,  } = require("../dao/user");
+const { Subscription } = require("../models/Subscriptions");
 const { DIMessage, ErrorMessage, SuccessMessage } = require("../utils/error");
 
-const subscribe = async (subscriptions) => {
+const subscribe = async (subscription) => {
   const subscriptionData = await subscriptionDao.subscribe(subscription);
   if (!subscriptionData)
     return new DIMessage().message(
       new ErrorMessage(500, "Something went wrong, try again"),
     );
    const {user, price}  = subscriptionData;
-    // Create transaction for this user.
-    const userTransaction = await transactionDao.getTransactionById(user);
-    const transactionData = null;
-    if(userTransaction){
-       transactionData = transactionDao.createUserTransaction({amount:userTransaction.amount += price, id });
-    }else {
-     transactionData  = transactionDao.createUserTransaction({amount:price, id });
-    }
+   console.log("User--->",user);
+   // Create transaction for this user.
+
+const transactionData = await transactionDao.createUserTransaction({
+  amount: price,
+  user
+});
+    
   return new DIMessage().message(
     new SuccessMessage(201, "Success", {
       subscriptionData,
