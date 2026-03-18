@@ -13,20 +13,21 @@ connectDb();
 //Routes...
 app.use(
     `${PREFIX_ROUTE_PATH}/auth`,
-    require("./src/routes/authenticationRouter").authenticationRouter
+    require("./src/routes/authenticationRouter").authenticationRouter,
 );
 app.use(
     `${PREFIX_ROUTE_PATH}/subscription`,
-    require("./src/routes/subscriptionsRouter").subscriptionRouter
+    require("./src/routes/subscriptionsRouter").subscriptionRouter,
 );
 app.use(
     `${PREFIX_ROUTE_PATH}/users`,
-    require("./src/routes/userRouter").userRouter
+    require("./src/routes/userRouter").userRouter,
 );
 app.use(
     `${PREFIX_ROUTE_PATH}/admin`,
-    require("./src/routes/adminRouter").adminRouter
+    require("./src/routes/adminRouter").adminRouter,
 );
+app.use(`${PREFIX_ROUTE_PATH}/statistics`, require("./src/routes/stats.route"));
 
 app.get("/", (req, res) => {
     res.status(200).json({ message: "success !" });
