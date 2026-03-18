@@ -19,7 +19,7 @@ const loginSchema= Joi.object({
 });
 
 const paramSchema = Joi.object({
-    id: Joi.string().email().required(),
+    id: Joi.string().required(),
 });
 
 module.exports = {
