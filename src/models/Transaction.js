@@ -1,7 +1,7 @@
 
 const mongoose = require("mongoose");
 
-const subscriptionSchema = mongoose.Schema({
+const transactionSchema = mongoose.Schema({
   paymentDate: {
     type: Date,
     default:Date.now
@@ -17,8 +17,8 @@ const subscriptionSchema = mongoose.Schema({
 
 }, { timestamps: true });
 
-const Subscription = mongoose.model("Subscription", subscriptionSchema);
+const Transaction = mongoose.model("Transaction", transactionSchema);
 
 module.exports = {
-  Subscription
+  Transaction
 }

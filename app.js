@@ -28,6 +28,10 @@ app.use(
     require("./src/routes/adminRouter").adminRouter
 );
 
+app.get("/", (req, res) => {
+    res.status(200).json({ message: "success !" });
+});
+
 // Server.
 app.listen(process.env.PORT || 3000, (err) => {
     if (!err) console.log("Server Starting...");
