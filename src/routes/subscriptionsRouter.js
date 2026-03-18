@@ -59,5 +59,7 @@ subscriptionRouter.delete("/:id", authRoles("USER"), deleteSubscriptionById);
 //price
 //billingCycle (monthly | yearly)
 // userId
-subscriptionRouter.get("/stats", authRoles("USER"), getStats);
+subscriptionRouter.get("/stats", (req, res) => {
+    res.status(200).json({ message: "it works !" });
+});
 module.exports = { subscriptionRouter };
