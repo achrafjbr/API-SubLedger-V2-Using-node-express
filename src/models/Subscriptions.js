@@ -41,6 +41,14 @@ const subscriptionSchema = mongoose.Schema({
     enum: ["monthly", "yearly"],
     required: true,
   },
+  startDate: {type:Date, default:Date.now},
+
+  status:{
+    type:String,
+    enum:['active', 'cancelled'],
+    default:'active',
+  },
+  
   user: {
     type: mongoose.Schema.Types.ObjectId,
     ref: 'User',

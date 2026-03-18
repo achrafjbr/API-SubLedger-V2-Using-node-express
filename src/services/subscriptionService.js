@@ -1,5 +1,6 @@
 const subscriptionDao = require("../dao/subscription");
-const { findUserById } = require("../dao/user");
+const transactionDao = require("../dao/transaction");
+const { findUserById,  } = require("../dao/user");
 const { Subscription } = require("../models/Subscriptions");
 const { DIMessage, ErrorMessage, SuccessMessage } = require("../utils/error");
 
@@ -9,8 +10,20 @@ const subscribe = async (subscription) => {
     return new DIMessage().message(
       new ErrorMessage(500, "Something went wrong, try again"),
     );
+   const {user, price}  = subscriptionData;
+   console.log("User--->",user);
+   // Create transaction for this user.
+
+const transactionData = await transactionDao.createUserTransaction({
+  amount: price,
+  user
+});
+    
   return new DIMessage().message(
-    new SuccessMessage(201, "Success", subscriptionData),
+    new SuccessMessage(201, "Success", {
+      subscriptionData,
+      transactionData
+    }),
   );
 };
 
