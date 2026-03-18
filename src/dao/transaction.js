@@ -1,13 +1,16 @@
 const { Transaction } = require('../models/Transaction')
 
+const createUserTransaction = async (transaction) => {
+  return await Transaction.updateOne(
+    { user: transaction.user },
+    { $inc: { amount: transaction.amount } },
+    { upsert: true, new: true },
+  );
+};
+  
 
-const createUserTransaction = async (transaction) =>
-  await Transaction.updateOne({user:userId}, {$setOrInsert:{
-    amount:transaction.amount,
-  }})
-
-  const getTransactionById =async(userId)=>{
-    await Transaction.findOne({user:userId})
+  const getTransactionById =async(user)=>{
+    return await Transaction.findOne({user:user})
   }
 
 module.exports = {
