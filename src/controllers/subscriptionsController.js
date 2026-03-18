@@ -53,8 +53,9 @@ const getSubscriptionById = async (request, response) => {
   } = request; // [id] refers to the sub id
   const { user } = request;
 
-   const {error} =  paramSchema.validate({id:id});
-    if(error) return response.status(400).json({ error: error.details[0].message });
+    const { error } = paramSchema.validate({ id: id });
+    if (error)
+        return response.status(400).json({ error: error.details[0].message });
 
   try {
     const result = await getSubscription(id);
@@ -85,37 +86,42 @@ const getSubscriptionById = async (request, response) => {
 
 
 const updateSubscriptionById = async (request, response) => {
-  // xof id dial has abonnement wax fiha nafs id dial user 3ad dir update.
-  // Accessible uniquement au propriétaire.
-  //Doit vérifier l’ownership.
-  const {
-    params: { id },
-  } = request; // [id] refers to the sub id
-  const { user } = request;
-  const { body } = request;
-     const {error} =  paramSchema.validate({id:id});
-    if(error) return response.status(400).json({ error: error.details[0].message });
-  try {
-    const result = await getSubscription(id);
-    // that's means we have success case
-    if (result.statusCode == 200) {
-      console.log('connected user',result.data.user);
-      console.log('body',body);
-      // TODO: i don't know which one is right, i'll debug this after test.
-      //result.data.user._id == request.user.id
-      if (result.data.user == user.id) {
-        const subscriptionResult = await updateSubscription(id, body);
-        response.status(subscriptionResult.statusCode).json(subscriptionResult);
-      }
-    } else {
-      return response.status(result.statusCode).json(result);
+    // xof id dial has abonnement wax fiha nafs id dial user 3ad dir update.
+    // Accessible uniquement au propriétaire.
+    //Doit vérifier l’ownership.
+    const {
+        params: { id },
+    } = request; // [id] refers to the sub id
+    const { user } = request;
+    const { body } = request;
+    const { error } = paramSchema.validate({ id: id });
+
+    if (error)
+        return response.status(400).json({ error: error.details[0].message });
+
+    try {
+        const result = await getSubscription(id);
+        // that's means we have success case
+        if (result.statusCode == 200) {
+            console.log("connected user", result.data.user);
+            console.log("body", body);
+            // TODO: i don't know which one is right, i'll debug this after test.
+            //result.data.user._id == request.user.id
+            if (result.data.user == user.id) {
+                const subscriptionResult = await updateSubscription(id, body);
+                response
+                    .status(subscriptionResult.statusCode)
+                    .json(subscriptionResult);
+            }
+        } else {
+            return response.status(result.statusCode).json(result);
+        }
+    } catch (error) {
+        return response.status(500).json({
+            statusCode: 500,
+            message: error.message,
+        });
     }
-  } catch (error) {
-    return response.status(500).json({
-      statusCode: 500,
-      message: error.message,
-    });
-  }
 };
 
 
