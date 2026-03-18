@@ -9,7 +9,7 @@ const { Subscription } = require("../models/Subscriptions");
 
 const getStats = async (req, res) => {
     try {
-        const CountAndTotal = await Subscription.ageggate([
+        const CountAndTotal = await Subscription.agreggate([
             { $count: "total" },
 
             {
@@ -19,7 +19,7 @@ const getStats = async (req, res) => {
 
         res.status(200).json({ CountAndTotal });
     } catch (error) {
-        return response.status(500).json({
+        return res.status(500).json({
             statusCode: 500,
             message: error.message,
         });
