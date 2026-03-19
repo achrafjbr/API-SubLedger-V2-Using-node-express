@@ -7,15 +7,20 @@ const {
   updateSubscription,
   deleteSubscription,
 } = require("../services/subscriptionService");
-const {createSubscriptionSchema, paramSchema} =require('../utils/validation');
+const {
+  createSubscriptionSchema,
+  paramSchema,
+} = require("../utils/validation");
 
 const createSubscription = async (request, response) => {
   const { body } = request;
-  const {user:{id}} = request;
- //const {error} =  createSubscriptionSchema.validate(body);
-   // if(error) return response.status(400).json({ error: error.details[0].message });
+  const {
+    user: { id },
+  } = request;
+  //const {error} =  createSubscriptionSchema.validate(body);
+  // if(error) return response.status(400).json({ error: error.details[0].message });
   try {
-    const result = await subscribe({...body, user:id});
+    const result = await subscribe({ ...body, user: id });
     response.status(result.statusCode).json(result);
   } catch (error) {
     response.status(500).json({
@@ -24,7 +29,6 @@ const createSubscription = async (request, response) => {
     });
   }
 };
-
 
 const getSubscriptions = async (request, response) => {
   // Lister les abonnements : jib les abbonement dial had user
@@ -44,7 +48,6 @@ const getSubscriptions = async (request, response) => {
   }
 };
 
-
 const getSubscriptionById = async (request, response) => {
   // Voir un abonnement : jib abonement b id o xofha wax belongs to this user
   //Doit vérifier que l’abonnement appartient à l’utilisateur connecté
@@ -53,9 +56,9 @@ const getSubscriptionById = async (request, response) => {
   } = request; // [id] refers to the sub id
   const { user } = request;
 
-    const { error } = paramSchema.validate({ id: id });
-    if (error)
-        return response.status(400).json({ error: error.details[0].message });
+  const { error } = paramSchema.validate({ id: id });
+  if (error)
+    return response.status(400).json({ error: error.details[0].message });
 
   try {
     const result = await getSubscription(id);
@@ -84,57 +87,53 @@ const getSubscriptionById = async (request, response) => {
   }
 };
 
-
 const updateSubscriptionById = async (request, response) => {
-    // xof id dial has abonnement wax fiha nafs id dial user 3ad dir update.
-    // Accessible uniquement au propriétaire.
-    //Doit vérifier l’ownership.
-    const {
-        params: { id },
-    } = request; // [id] refers to the sub id
-    const { user } = request;
-    const { body } = request;
-    const { error } = paramSchema.validate({ id: id });
+  // xof id dial has abonnement wax fiha nafs id dial user 3ad dir update.
+  // Accessible uniquement au propriétaire.
+  //Doit vérifier l’ownership.
+  const {
+    params: { id },
+  } = request; // [id] refers to the sub id
+  const { user } = request;
+  const { body } = request;
+  const { error } = paramSchema.validate({ id: id });
 
-    if (error)
-        return response.status(400).json({ error: error.details[0].message });
+  if (error)
+    return response.status(400).json({ error: error.details[0].message });
 
-    try {
-        const result = await getSubscription(id);
-        // that's means we have success case
-        if (result.statusCode == 200) {
-            console.log("connected user", result.data.user);
-            console.log("body", body);
-            // TODO: i don't know which one is right, i'll debug this after test.
-            //result.data.user._id == request.user.id
-            if (result.data.user == user.id) {
-                const subscriptionResult = await updateSubscription(id, body);
-                response
-                    .status(subscriptionResult.statusCode)
-                    .json(subscriptionResult);
-            }
-        } else {
-            return response.status(result.statusCode).json(result);
-        }
-    } catch (error) {
-        return response.status(500).json({
-            statusCode: 500,
-            message: error.message,
-        });
+  try {
+    const result = await getSubscription(id);
+    // that's means we have success case
+    if (result.statusCode == 200) {
+      console.log("connected user", result.data.user);
+      console.log("body", body);
+      // TODO: i don't know which one is right, i'll debug this after test.
+      //result.data.user._id == request.user.id
+      if (result.data.user == user.id) {
+        const subscriptionResult = await updateSubscription(id, body);
+        response.status(subscriptionResult.statusCode).json(subscriptionResult);
+      }
+    } else {
+      return response.status(result.statusCode).json(result);
     }
+  } catch (error) {
+    return response.status(500).json({
+      statusCode: 500,
+      message: error.message,
+    });
+  }
 };
 
-
 const deleteSubscriptionById = async (request, response) => {
-  
   // xof id dial has abonnement wax fiha nafs id dial user 3ad dir delete.
   // Accessible uniquement au propriétaire.
   //Doit vérifier l’ownership.
   const {
     params: { id },
   } = request; // [id] refers to the sub id
-     const {error} =  paramSchema.validate({id:id});
-    if(error) return response.status(400).json({ error: error.details[0].message });
+  const { error } = paramSchema.validate({ id: id });
+  if (error)
+    return response.status(400).json({ error: error.details[0].message });
   try {
     const result = await getSubscription(id);
     // that's means we have success case
@@ -156,10 +155,33 @@ const deleteSubscriptionById = async (request, response) => {
   }
 };
 
+const cancelSubscription = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const sub = await getSubscription(id);
+
+    if (sub.statusCode !== 200) {
+      return res.status(sub.statusCode).json(sub);
+    }
+
+    if (sub.data.user.toString() !== req.user.id) {
+      return res.status(403).json({ message: "Not authorized" });
+    }
+
+    const result = await updateSubscription(id, { status: "cancelled" });
+
+    return res.status(200).json(result);
+  } catch (err) {
+    return res.status(500).json({ message: err.message });
+  }
+};
+
 module.exports = {
   createSubscription,
   getSubscriptions,
   getSubscriptionById,
   deleteSubscriptionById,
   updateSubscriptionById,
+  cancelSubscription,
 };
