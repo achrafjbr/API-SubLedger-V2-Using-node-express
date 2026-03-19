@@ -23,6 +23,11 @@ app.use(
     `${PREFIX_ROUTE_PATH}/users`,
     require("./src/routes/userRouter").userRouter,
 );
+app.use(
+    `${PREFIX_ROUTE_PATH}/admin`,
+    require("./src/routes/adminRouter").adminRouter,
+);
+app.use(`${PREFIX_ROUTE_PATH}/statistics`, require("./src/routes/stats.route"));
 
 app.get("/", (req, res) => {
     res.status(200).json({ message: "success !" });

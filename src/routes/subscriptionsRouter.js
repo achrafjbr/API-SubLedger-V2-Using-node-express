@@ -1,15 +1,16 @@
 const {
-    createSubscription,
-    getSubscriptions,
-    getSubscriptionById,
-    updateSubscriptionById,
-    deleteSubscriptionById,
+  createSubscription,
+  getSubscriptions,
+  getSubscriptionById,
+  updateSubscriptionById,
+  deleteSubscriptionById,
+  cancelSubscription,
 } = require("../controllers/subscriptionsController");
 const {
-    isAuthenticated,
-    isUser,
-    isAdmin,
-    authRoles,
+  isAuthenticated,
+  isUser,
+  isAdmin,
+  authRoles,
 } = require("../middlewares/authentication");
 
 const { getStats } = require("../controllers/stats.controller");
@@ -54,12 +55,15 @@ subscriptionRouter.put("/:id", authRoles("USER"), updateSubscriptionById);
  */
 subscriptionRouter.delete("/:id", authRoles("USER"), deleteSubscriptionById);
 
+subscriptionRouter.put(
+  "/:id/cancel",
+  authRoles("USER", "ADMIN", cancelSubscription),
+);
+
 // id
 //name
 //price
 //billingCycle (monthly | yearly)
 // userId
-subscriptionRouter.get("/stats", (req, res) => {
-    res.status(200).json({ message: "it works !" });
-});
+
 module.exports = { subscriptionRouter };
