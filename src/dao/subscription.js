@@ -6,11 +6,11 @@ const subscribe = async (subscription) =>
 const getSubscription = async (subscriptionId) =>
     await Subscription.findOne({ _id: subscriptionId });
 
-const getSubscriptionByUser = async (userId) =>
-    await Subscription.findOne({ userId: userId });
+const getSubscriptionsByUser = async (userId) =>
+    await Subscription.find({ user: userId });
 
 module.exports = {
     subscribe,
     getSubscription,
-    getSubscriptionByUser,
+    getSubscriptionsByUser,
 };
